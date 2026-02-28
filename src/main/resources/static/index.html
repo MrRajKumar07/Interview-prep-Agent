@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Interview Prep Agent</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #050505;
+            color: #fff;
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+                radial-gradient(at 50% 0%, hsla(225,39%,30%,0.1) 0, transparent 50%),
+                radial-gradient(at 100% 0%, hsla(263,45%,20%,0.2) 0, transparent 50%);
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+        }
+
+        /* SPECIFIC FIX FOR LEVEL DROPDOWN:
+           'color-scheme: dark' forces the browser's native popup to be dark.
+        */
+        #level {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1rem;
+            padding-right: 2.5rem;
+            color-scheme: dark; 
+        }
+
+        #level option {
+            background-color: #121212 !important;
+            color: #ffffff !important;
+        }
+
+        .glow-button {
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .glow-button:hover {
+            box-shadow: 0 0 25px rgba(139, 92, 246, 0.6);
+            transform: translateY(-2px);
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <div class="max-w-6xl mx-auto px-6 py-10">
+        <header class="flex flex-col md:flex-row justify-between items-center mb-12 gap-6">
+            <div class="flex items-center gap-3">
+                <div class="p-3 bg-purple-600 rounded-2xl glow-button">
+                    <i data-lucide="brain-circuit" class="text-white"></i>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-bold tracking-tight">IP<span class="text-purple-500">Agent</span></h1>
+                    <p id="scoreTracker" class="text-xs text-purple-300 font-semibold hidden">Current Score: <span id="currentScore">0</span></p>
+                </div>
+            </div>
+            
+            <div class="flex gap-4">
+                <select id="level" class="glass px-4 py-2 rounded-xl text-sm focus:outline-none focus:border-purple-500 cursor-pointer transition-all">
+                    <option value="Beginner">Beginner</option>
+                    <option value="Intermediate" selected>Intermediate</option>
+                    <option value="Advanced">Advanced</option>
+                </select>
+                <button onclick="generateQuestions()" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-xl font-semibold flex items-center gap-2 glow-button">
+                    <i data-lucide="sparkles" size="18"></i> Generate Prep Kit
+                </button>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+            <div class="glass p-6 rounded-3xl flex items-center gap-4">
+                <i data-lucide="book-open" class="text-purple-400"></i>
+                <div class="flex-1">
+                    <p class="text-xs text-gray-500 uppercase font-bold tracking-widest mb-1">Course</p>
+                    <input id="courseInput" type="text" placeholder="e.g., Java Full Stack" class="bg-transparent w-full focus:outline-none text-lg">
+                </div>
+            </div>
+            <div class="glass p-6 rounded-3xl flex items-center gap-4">
+                <i data-lucide="layers" class="text-blue-400"></i>
+                <div class="flex-1">
+                    <p class="text-xs text-gray-500 uppercase font-bold tracking-widest mb-1">Topic</p>
+                    <input id="topicInput" type="text" placeholder="e.g., Spring Boot" class="bg-transparent w-full focus:outline-none text-lg">
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div class="space-y-6">
+                <div class="flex items-center gap-2 mb-2">
+                    <i data-lucide="terminal" class="text-green-400"></i>
+                    <h2 class="text-xl font-bold">Interview Questions</h2>
+                </div>
+                <div id="theoryContainer" class="space-y-4">
+                    <div class="text-gray-500 italic p-10 text-center glass rounded-3xl">Ready for your prompt...</div>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <div class="flex items-center gap-2 mb-2">
+                    <i data-lucide="check-circle" class="text-yellow-400"></i>
+                    <h2 class="text-xl font-bold">Quick Quiz</h2>
+                </div>
+                <div id="quizContainer" class="space-y-4">
+                    <div class="text-gray-500 italic p-10 text-center glass rounded-3xl">Generate to see quiz items...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+        let correctAnswersCount = 0;
+
+        async function generateQuestions() {
+            const course = document.getElementById('courseInput').value || "Java Full Stack";
+            const topic = document.getElementById('topicInput').value || "Spring Boot";
+            const level = document.getElementById('level').value;
+
+            correctAnswersCount = 0;
+            document.getElementById('currentScore').innerText = "0";
+            document.getElementById('scoreTracker').classList.add('hidden');
+
+            document.getElementById('theoryContainer').innerHTML = `<div class="animate-pulse glass p-8 rounded-3xl text-center">AI is thinking...</div>`;
+            document.getElementById('quizContainer').innerHTML = `<div class="animate-pulse glass p-8 rounded-3xl text-center">Analyzing topics...</div>`;
+
+            try {
+                const response = await fetch('http://localhost:6540/api/v1/ai/interview-questions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ courseName: course, topicName: topic, level: level })
+                });
+
+                const data = await response.json();
+                renderData(data);
+            } catch (error) {
+                console.error("API Error:", error);
+                alert("Failed to connect to Spring Boot backend. Ensure it is running on port 6540.");
+            }
+        }
+
+        function renderData(data) {
+            // Theory Questions Rendering
+            const theoryContainer = document.getElementById('theoryContainer');
+            theoryContainer.innerHTML = data.questions.map(q => `
+                <div class="glass p-6 rounded-3xl hover:border-purple-500/50 transition-all group mb-4">
+                    <h3 class="text-purple-400 font-bold mb-3">Q: ${q.question}</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">${q.answer}</p>
+                    <div class="bg-black/40 p-4 rounded-xl text-xs font-mono text-blue-300 border border-white/5 overflow-x-auto">
+                        <span class="text-gray-500 block mb-2">// Code Example</span>
+                        ${q.exampleWithCode.replace(/\n/g, '<br>')}
+                    </div>
+                </div>
+            `).join('');
+
+            // Quiz Questions Rendering
+            const quizContainer = document.getElementById('quizContainer');
+            document.getElementById('scoreTracker').classList.remove('hidden');
+            
+            quizContainer.innerHTML = data.quizQuestions.map((q, idx) => {
+                const questionId = `q-block-${idx}`;
+                const safeExp = (q.explanation || "No explanation provided").replace(/'/g, "\\'");
+                const safeCorrect = q.correctOption.replace(/'/g, "\\'");
+
+                return `
+                    <div class="glass p-6 rounded-3xl mb-4" id="${questionId}">
+                        <p class="font-semibold mb-4 text-gray-200">${idx+1}. ${q.question}</p>
+                        <div class="grid gap-3">
+                            ${q.options.map(opt => {
+                                const safeOpt = opt.replace(/'/g, "\\'");
+                                return `
+                                    <button 
+                                        onclick="checkAnswer(this, '${safeOpt}', '${safeCorrect}', '${safeExp}', '${questionId}')"
+                                        class="quiz-option text-left px-4 py-3 rounded-xl bg-white/5 border border-white/10 hover:border-purple-500/50 transition-all text-sm">
+                                        ${opt}
+                                    </button>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            lucide.createIcons();
+        }
+
+        function checkAnswer(button, selected, correct, explanation, questionId) {
+            const parent = document.getElementById(questionId);
+            const allButtons = parent.querySelectorAll('.quiz-option');
+            
+            let expBox = parent.querySelector('.explanation-box');
+            if (!expBox) {
+                expBox = document.createElement('div');
+                expBox.className = "explanation-box mt-4 p-4 rounded-2xl text-sm hidden transition-all duration-500";
+                parent.appendChild(expBox);
+            }
+
+            allButtons.forEach(btn => {
+                btn.disabled = true;
+                btn.style.cursor = "default";
+                if (btn.innerText.trim() === correct.trim()) {
+                    btn.classList.add('border-green-500/50', 'text-green-400', 'bg-green-500/10');
+                }
+            });
+
+            if (selected.trim() === correct.trim()) {
+                correctAnswersCount++;
+                document.getElementById('currentScore').innerText = correctAnswersCount;
+                button.classList.add('bg-green-600/40', 'border-green-500');
+                expBox.innerHTML = `<span class="text-green-400 font-bold flex items-center gap-2">
+                    <i data-lucide="check-circle" size="14"></i> Correct!</span> 
+                    <p class="text-gray-400 mt-1">${explanation}</p>`;
+                expBox.classList.add('bg-green-500/10', 'border', 'border-green-500/20');
+            } else {
+                button.classList.add('bg-red-600/40', 'border-red-500');
+                expBox.innerHTML = `<span class="text-red-400 font-bold flex items-center gap-2">
+                    <i data-lucide="help-circle" size="14"></i> Explanation:</span> 
+                    <p class="text-gray-400 mt-1">${explanation}</p>`;
+                expBox.classList.add('bg-white/5', 'border', 'border-white/10');
+            }
+
+            expBox.classList.remove('hidden');
+            lucide.createIcons();
+        }
+    </script>
+</body>
+</html>

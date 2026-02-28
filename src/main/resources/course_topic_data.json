@@ -1,0 +1,81 @@
+{
+  "courses": [
+    {
+      "course": "Java Full Stack Development",
+      "topics": [
+        "Spring Boot & Microservices",
+        "JPA / Hibernate ORM",
+        "Spring Security & JWT",
+        "REST API Design Principles",
+        "Java 8+ Features (Streams/Lambda)",
+        "Multithreading & Concurrency"
+      ]
+    },
+    {
+      "course": "Data Structures & Algorithms",
+      "topics": [
+        "Arrays and Linked Lists",
+        "Stack and Queue Implementations",
+        "Binary Trees & BST",
+        "Recursion & Backtracking",
+        "Sorting & Searching Algorithms",
+        "Dynamic Programming Basics"
+      ]
+    },
+    {
+      "course": "Frontend Engineering (React)",
+      "topics": [
+        "React Hooks (useState, useEffect)",
+        "State Management (Redux/Context API)",
+        "Component Lifecycle",
+        "Virtual DOM & Reconciliation",
+        "React Router & Navigation",
+        "CSS Frameworks (Tailwind/Bootstrap)"
+      ]
+    },
+    {
+      "course": "Database Management Systems",
+      "topics": [
+        "SQL Joins & Subqueries",
+        "Database Normalization",
+        "Indexing & Query Optimization",
+        "ACID Properties & Transactions",
+        "NoSQL Basics (MongoDB)",
+        "Stored Procedures & Triggers"
+      ]
+    },
+    {
+      "course": "Cloud & DevOps",
+      "topics": [
+        "Docker Containerization",
+        "Kubernetes Basics",
+        "CI/CD Pipelines (Jenkins/GitHub Actions)",
+        "AWS Core Services (EC2, S3, RDS)",
+        "Infrastructure as Code (Terraform)",
+        "Monitoring & Logging (ELK/Prometheus)"
+      ]
+    },
+    {
+      "course": "System Design",
+      "topics": [
+        "Scalability (Vertical vs Horizontal)",
+        "Load Balancing Strategies",
+        "Caching (Redis/Memcached)",
+        "Message Queues (Kafka/RabbitMQ)",
+        "CAP Theorem",
+        "Microservices Patterns"
+      ]
+    },
+    {
+      "course": "Core Web Technologies",
+      "topics": [
+        "HTML5 Semantic Elements",
+        "CSS3 Flexbox & Grid",
+        "JavaScript ES6+ Concepts",
+        "DOM Manipulation",
+        "Asynchronous JS (Promises/Async-Await)",
+        "Web Security (CORS, XSS, CSRF)"
+      ]
+    }
+  ]
+}
